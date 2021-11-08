@@ -58,4 +58,4 @@ See COPYING for full license text.
 Specific files or libraries might be also available under different terms, see included comment or package licenses.
 
 ## Acknowledgements
-Async loop handling and wheeling code is based on [Blender Cloud Addon](https://cloud.blender.org/services)
+Async loop handling is based on [Blender Cloud Addon](https://cloud.blender.org/services)
