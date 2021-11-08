@@ -1,0 +1,18 @@
+{
+    "name": "pribambase",
+    "displayName": "Pribambase",
+    "description": "Paint pixelart textures in Blender using Aseprite",
+    "version": "2.00",
+    "author": { "name": "lampysprites",
+                "email": "lampysprites@hotmail.com",
+                "url": "https://lampysprites.itch.io/pribambase" },
+    "contributors": [ ],
+    "publisher": "lampysprites",
+    "license": "GPL-3.0",
+    "categories": [ "Scripts" ],
+    "contributes": {
+      "scripts": [
+          { "path": "./Commands.lua" }
+      ]
+    }
+  }
