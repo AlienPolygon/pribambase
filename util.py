@@ -41,7 +41,7 @@ def image_name(img):
         return img.sb_source
 
     elif not img.packed_file and fp:
-        return fp if path.isabs(fp) else bpy.path.abspath(fp)
+        return bpy.path.abspath(fp) if fp.startswith("//") else fp
 
     return ""
 
@@ -64,7 +64,9 @@ def update_image(w, h, name, pixels):
     img = None
 
     for i in bpy.data.images:
-        if (i.sb_source == name) or (name == i.filepath) or (name == i.name):
+        if (i.sb_source == name) or \
+                (name == (bpy.path.abspath(i.filepath) if i.filepath.startswith("//") else i.filepath)) \
+                or (name == i.name):
             img = i
             break
     else:
