@@ -371,6 +371,35 @@ class SB_OT_edit_sprite(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class SB_OT_edit_sprite_copy(bpy.types.Operator):
+    bl_idname = "pribambase.edit_sprite_copy"
+    bl_label = "Edit Copy"
+    bl_description = "Open copy of the image in a new file in Aseprite, without syncing"
+
+
+    @classmethod
+    def poll(self, context):
+        return addon.connected and context.area.type == 'IMAGE_EDITOR' \
+            and context.edit_image and context.edit_image.has_data
+
+
+    def execute(self, context):
+        img = context.edit_image
+
+        pixels = np.asarray(np.array(img.pixels) * 255, dtype=np.ubyte)
+        pixels.shape = (img.size[1], pixels.size // img.size[1])
+        pixels = np.ravel(pixels[::-1,:])
+
+        msg = encode.image(
+            name="",
+            size=img.size,
+            pixels=pixels.tobytes())
+
+        addon.server.send(msg)
+
+        return {'FINISHED'}
+
+
 class SB_OT_replace_sprite(bpy.types.Operator):
     bl_description = "Replace current texture with a file using Aseprite"
     bl_idname = "pribambase.replace_sprite"
@@ -412,6 +441,7 @@ class SB_MT_menu_2d(bpy.types.Menu):
         layout.operator("pribambase.new_sprite", icon='FILE_NEW')
         layout.operator("pribambase.open_sprite", icon='FILE_FOLDER')
         layout.operator("pribambase.edit_sprite", icon='GREASEPENCIL')
+        layout.operator("pribambase.edit_sprite_copy")
         layout.operator("pribambase.replace_sprite")
         layout.separator()
         layout.operator("pribambase.set_uv", icon='UV_VERTEXSEL')

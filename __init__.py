@@ -60,6 +60,7 @@ classes = (
     SB_OT_open_sprite,
     SB_OT_new_sprite,
     SB_OT_edit_sprite,
+    SB_OT_edit_sprite_copy,
     SB_OT_replace_sprite,
     SB_OT_reference_add,
     SB_OT_reference_reload,
