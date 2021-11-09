@@ -35,6 +35,15 @@ After that, a new menu option called **Sync** should appear in the **File** menu
 
 After that, a new section called **Sync** will appear in **N > Tools** tab in viewport, and a new menu called **Sprite** will appear in the Image/uv editor.
 
+## Usage
+
+After the plugins are installed, turn each of them on before drawing: nn blender press __Connect__ on top of the plugin's panel in the viewport, in Aseprite press __File > Sync__ . After that you can:
+
+* Open any texture used in blendfile normally in Aseprite, and it will be updated in Blender as you paint. This applies to both textures created normally with blender, and textures set up by the plugin
+* Use **Image Editor > Sprite** menu to load aseprite files as textures, or create new ones
+* Use **Sprite > Send UV** to show the UV Map in aseprite
+
+See [Reference](Reference) for all features.
 
 ## Source
 
