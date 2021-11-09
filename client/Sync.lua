@@ -356,7 +356,7 @@ else
             else
                 syncSprite()
             end
-        else
+        elseif app.fs.filePath(path) and app.fs.isFile(path) then -- check if absolute path; message can't contain rel path, so getting one mean it's a datablock name, and we don't need to open it if it isn't
             Sprite{ fromFile = path }
         end
     end

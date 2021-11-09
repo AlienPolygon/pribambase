@@ -148,10 +148,9 @@ class SB_OT_send_uv(bpy.types.Operator):
         source = ""
 
         if self.destination == 'texture':
-            if context.area.type == 'IMAGE_EDITOR':
+            try:
                 source = util.image_name(context.area.spaces.active.image)
-
-            if not source:
+            except:
                 self.report({"ERROR"}, "'Texture Source' only works with a file-associated texture")
                 return {'CANCELLED'}
 

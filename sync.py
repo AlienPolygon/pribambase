@@ -102,7 +102,7 @@ class Server():
         await self._ws.prepare(request)
 
         # client connected
-        imgs = tuple(util.image_name(img) or img.name for img in bpy.data.images)
+        imgs = tuple(util.image_name(img) for img in bpy.data.images)
         await self._ws.send_bytes(encode.texture_list(imgs), False)
         util.refresh()
 
@@ -163,7 +163,7 @@ class SB_OT_texture_list(bpy.types.Operator):
 
 
     def execute(self, context):
-        images = (util.image_name(img) or img.name for img in bpy.data.images)
+        images = (util.image_name(img) for img in bpy.data.images)
         msg = encode.texture_list(images)
         addon.server.send(msg)
 

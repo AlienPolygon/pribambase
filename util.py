@@ -43,7 +43,7 @@ def image_name(img):
     elif not img.packed_file and fp:
         return bpy.path.abspath(fp) if fp.startswith("//") else fp
 
-    return ""
+    return img.name
 
 
 def new_packed_image(name, w, h):
