@@ -337,6 +337,18 @@ else
     end
 
 
+    local function handleFocus(msg)
+        local _id, path = string.unpack("<Bs4", msg)
+
+        for _,sprite in ipairs(app.sprites) do
+            if sprite.filename == path then
+                app.activeSprite = sprite
+                break
+            end
+        end
+    end
+
+
     local function handleOpenSprite(msg)
         local _id, path = string.unpack("<Bs4", msg)
 
@@ -384,6 +396,7 @@ else
         [string.byte('L')] = handleTextureList,
         [string.byte('S')] = handleNewSprite,
         [string.byte('O')] = handleOpenSprite,
+        [string.byte('F')] = handleFocus,
     }
 
 

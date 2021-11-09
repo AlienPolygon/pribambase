@@ -203,7 +203,7 @@ class SB_OT_send_uv(bpy.types.Operator):
                 layer=addon.prefs.uv_layer,
                 opacity=int(addon.prefs.uv_color[3] * 255))
         if source:
-            msg = encode.batch((encode.sprite_open(source), msg))
+            msg = encode.batch((encode.sprite_focus(source), msg))
 
         addon.server.send(msg)
 

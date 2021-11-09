@@ -80,3 +80,10 @@ def sprite_open(name:str) -> bytearray:
     add_id(data, 'O')
     add_string(data, name)
     return data
+
+
+def sprite_focus(name:str) -> bytearray:
+    data = bytearray()
+    add_id(data, 'F')
+    add_string(data, name)
+    return data
