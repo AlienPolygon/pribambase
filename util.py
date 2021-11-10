@@ -23,6 +23,7 @@ import imbuf
 import os
 from os import path
 import tempfile
+import numpy as np
 
 from .addon import addon
 
@@ -92,19 +93,18 @@ def update_image(w, h, name, pixels):
             img.scale(w, h)
 
     # convert data to blender accepted floats
-    pixels = pixels / 255.0
+    pixels = np.float32(pixels) / 255.0
     # flip y axis ass backwards
     pixels.shape = (h, pixels.size // h)
-    pixels = pixels[::-1,:]
+    pixels = pixels[::-1,:].ravel()
 
     # change blender data
     try:
-        # version >= 2.83
-        # much faster
-        img.pixels.foreach_set(pixels.ravel())
-    except:
+        # version >= 2.83; this is much faster
+        img.pixels.foreach_set(pixels)
+    except AttributeError:
         # version < 2.83
-        img.pixels[:] = pixels.ravel()
+        img.pixels[:] = pixels
 
     img.update()
 
