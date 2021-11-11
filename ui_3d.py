@@ -154,7 +154,16 @@ class SB_PT_panel_link(bpy.types.Panel):
         layout = self.layout
 
         row = layout.row()
-        row.label(text="Link UP" if addon.server_up else "Link DOWN")
+        status = "Off"
+        icon = 'UNLINKED'
+        if addon.connected:
+            status = "Connected"
+            icon = 'CHECKMARK'
+        elif addon.server_up:
+            status = "Waiting..."
+            icon = 'SORTTIME'
+
+        row.label(text=status, icon=icon)
 
         row = row.row()
         row.alignment = 'RIGHT'
