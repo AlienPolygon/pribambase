@@ -262,7 +262,7 @@ else
         local sprite = Sprite(w, h, ColorMode.RGB)
         if #name > 0 then
             sprite.filename = name
-            app.command.Refresh() -- hack; calling any command refreshes the tabs and the window title
+            app.command.RunScript() -- hack; calling any command refreshes the tabs and the window title; without filename="..." RunScript tries to open a file and fails silently
         end
         sprite.cels[1].image.bytes = pixels
         syncSprite()
@@ -330,7 +330,7 @@ else
         local prev = spr
         local create = Sprite(w, h, mode)
         create.filename = name
-        app.command.Refresh() -- hack; calling any command refreshes the tabs and the window title
+        app.command.RunScript() -- hack; calling any command refreshes the tabs and the window title; without filename="..." RunScript tries to open a file and fails silently
         sprfile = name
 
         syncList[name] = true
