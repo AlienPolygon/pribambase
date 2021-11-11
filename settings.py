@@ -81,6 +81,11 @@ class SB_Preferences(bpy.types.AddonPreferences):
         description="Default thickness of the UV map with scale appied. For example, if `UV scale` is 2 and thickness is 3, the lines will be 1.5 pixel thick in aseprite",
         default=4.0)
 
+    skip_modal: bpy.props.BoolProperty(
+        name="No modal timers",
+        description="Change the way the changes are applied to blender data. Degrades the experience but might fix some crashes",
+        default=False)
+
 
     def template_box(self, layout, label="Box"):
         row = layout.row().split(factor=0.15)
@@ -114,6 +119,10 @@ class SB_Preferences(bpy.types.AddonPreferences):
             box.row().operator("pribambase.stop_server")
         else:
             box.row().operator("pribambase.start_server")
+
+        box = self.template_box(layout, label="Misc:")
+
+        box.row().prop(self, "skip_modal")
 
 
 class SB_OT_preferences(bpy.types.Operator):

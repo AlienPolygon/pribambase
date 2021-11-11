@@ -52,7 +52,7 @@ class ModalExecuteMixin:
         return {'FINISHED'}
 
     def execute(self, context):
-        if context and context.window:
+        if context and context.window and not addon.prefs.skip_modal:
             context.window_manager.modal_handler_add(self)
             self.timer = context.window_manager.event_timer_add(0.000001, window=context.window)
             return {'RUNNING_MODAL'}
