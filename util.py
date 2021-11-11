@@ -84,56 +84,71 @@ def new_packed_image(name, w, h):
     os.remove(tmp)
     return img
 
+update_image_args = None
+class SB_OT_update_image(bpy.types.Operator, ModalExecuteMixin):
+    bl_idname = "pribambase.update_image"
+    bl_label = "Update Image"
+    bl_description = "Report the message. Not redoable atm"
+    bl_options = {'REGISTER', 'UNDO_GROUPED', 'INTERNAL'}
+
+    def modal_execute(self, context):
+        """Replace the image with pixel data"""
+        img = None
+        w, h, name, pixels = self.args
+
+        for i in bpy.data.images:
+            if (i.sb_source == name) or \
+                    (name == (bpy.path.abspath(i.filepath) if i.filepath.startswith("//") else i.filepath)) \
+                    or (name == i.name):
+                img = i
+                break
+        else:
+            # to avoid accidentally reviving deleted images, we ignore anything doesn't exist already
+            return
+
+        if not img.has_data:
+            # load *some* data so that the image can be packed, and then updated
+            ib = imbuf.new((w, h))
+            tmp = path.join(tempfile.gettempdir(), "__sb__delete_me.png")
+            imbuf.write(ib, tmp)
+            img.filepath = tmp
+            img.reload()
+            img.pack()
+            img.filepath=""
+            img.use_fake_user = True
+            os.remove(tmp)
+
+        elif (img.size[0] != w or img.size[1] != h):
+                img.scale(w, h)
+
+        # convert data to blender accepted floats
+        pixels = np.float32(pixels) / 255.0
+        # flip y axis ass backwards
+        pixels.shape = (h, pixels.size // h)
+        pixels = pixels[::-1,:].ravel()
+
+        # change blender data
+        try:
+            # version >= 2.83; this is much faster
+            img.pixels.foreach_set(pixels)
+        except AttributeError:
+            # version < 2.83
+            img.pixels[:] = pixels
+
+        img.update()
+
+        return {'FINISHED'}
+
+
+    def execute(self, context):
+        self.args = update_image_args
+        return ModalExecuteMixin.execute(self, context)
+
 
 def update_image(w, h, name, pixels):
-    """Replace the image with pixel data"""
-    img = None
-
-    for i in bpy.data.images:
-        if (i.sb_source == name) or \
-                (name == (bpy.path.abspath(i.filepath) if i.filepath.startswith("//") else i.filepath)) \
-                or (name == i.name):
-            img = i
-            break
-    else:
-        # to avoid accidentally reviving deleted images, we ignore anything doesn't exist already
-        return
-
-    if not img:
-        return None
-
-    elif not img.has_data:
-        # load *some* data so that the image can be packed, and then updated
-        ib = imbuf.new((w, h))
-        tmp = path.join(tempfile.gettempdir(), "__sb__delete_me.png")
-        imbuf.write(ib, tmp)
-        img.filepath = tmp
-        img.reload()
-        img.pack()
-        img.filepath=""
-        img.use_fake_user = True
-        os.remove(tmp)
-
-    elif (img.size[0] != w or img.size[1] != h):
-            img.scale(w, h)
-
-    # convert data to blender accepted floats
-    pixels = np.float32(pixels) / 255.0
-    # flip y axis ass backwards
-    pixels.shape = (h, pixels.size // h)
-    pixels = pixels[::-1,:].ravel()
-
-    # change blender data
-    try:
-        # version >= 2.83; this is much faster
-        img.pixels.foreach_set(pixels)
-    except AttributeError:
-        # version < 2.83
-        img.pixels[:] = pixels
-
-    img.update()
-
-    return img
+    global update_image_args
+    update_image_args = w, h, name, pixels
+    bpy.ops.pribambase.update_image()
 
 
 class SB_OT_report(bpy.types.Operator, ModalExecuteMixin):

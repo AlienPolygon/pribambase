@@ -65,6 +65,7 @@ classes = (
     SB_OT_reference_add,
     SB_OT_reference_reload,
     SB_OT_reference_reload_all,
+    SB_OT_update_image,
 
     SB_PT_panel_link,
 
