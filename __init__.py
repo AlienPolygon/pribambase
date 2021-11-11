@@ -151,10 +151,6 @@ def start():
     if on_depsgraph_update_post not in bpy.app.handlers.depsgraph_update_post:
         bpy.app.handlers.depsgraph_update_post.append(on_depsgraph_update_post)
 
-    if bpy.app.version < (2, 83):
-        bpy.ops.pribambase.report(message_type='WARNING',
-            message="Pribambase works best in Blender versions 2.83 or later. Consider switching to a newer version for better performance and stability.")
-
 
 @persistent
 def on_load_post(scene):

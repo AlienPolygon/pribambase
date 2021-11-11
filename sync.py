@@ -104,6 +104,7 @@ class Server():
         # client connected
         imgs = tuple(util.image_name(img) for img in bpy.data.images)
         await self._ws.send_bytes(encode.texture_list(imgs), False)
+        bpy.ops.pribambase.report(message_type='INFO', message="Aseprite connected")
         util.refresh()
 
         async for msg in self._ws:
@@ -111,9 +112,10 @@ class Server():
                 await addon.handlers.process(msg.data)
 
             elif msg.type == aiohttp.WSMsgType.ERROR:
-                bpy.ops.pribambase.report({'ERROR'}, f"Connection closed with exception {self._ws.exception()}")
+                bpy.ops.pribambase.report(message_type='ERROR', message=f"Connection closed with exception {self._ws.exception()}")
 
         # client disconnected
+        bpy.ops.pribambase.report(message_type='INFO', message="Aseprite disconnected")
         util.refresh()
 
         return self._ws

@@ -57,7 +57,7 @@ class Image(Handler):
             if not bpy.context.window_manager.is_interface_locked:
                 util.update_image(size[0], size[1], name, data)
             else:
-                bpy.ops.pribambase.report({'WARNING'}, "UI is locked, image update skipped")
+                bpy.ops.pribambase.report(message_type='WARNING', message="UI is locked, image update skipped")
         except:
             # blender 2.80... if it crashes, it crashes :\
             util.update_image(size[0], size[1], name, data)
@@ -95,7 +95,7 @@ class ChangeName(Handler):
         try:
             # FIXME there's a risk of race condition but it's pretty bad if the rename doesn't happen
             while bpy.context.window_manager.is_interface_locked:
-                bpy.ops.pribambase.report({'WARNING'}, "UI is locked, waiting to update image source..")
+                bpy.ops.pribambase.report(message_type='WARNING', message="UI is locked, waiting to update image source..")
                 asyncio.sleep(0.1)
         except:
             # version 2.80... caveat emptor

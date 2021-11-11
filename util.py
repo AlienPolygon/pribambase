@@ -35,6 +35,31 @@ def refresh():
             area.tag_redraw()
 
 
+class ModalExecuteMixin:
+    """
+    bpy.types.Operator mixin that makes operator execute once via modal timer, allowing to modify 
+    blender state from non-operator code with fewer surprizes. Uses a non-modal fallback for older
+    versions. To use, define modal_execute(self, ctx) method
+    """
+
+    def modal_execute(self, context):
+        raise NotImplementedError()
+
+    def modal(self, context, event):
+        if event.type == 'TIMER':
+            context.window_manager.event_timer_remove(self.timer)
+            self.modal_execute(context)
+        return {'FINISHED'}
+
+    def execute(self, context):
+        if context and context.window:
+            context.window_manager.modal_handler_add(self)
+            self.timer = context.window_manager.event_timer_add(0.000001, window=context.window)
+            return {'RUNNING_MODAL'}
+        else:
+            return self.modal_execute(context)
+
+
 def image_name(img):
     fp = img.filepath
 
@@ -111,15 +136,15 @@ def update_image(w, h, name, pixels):
     return img
 
 
-class SB_OT_report(bpy.types.Operator):
+class SB_OT_report(bpy.types.Operator, ModalExecuteMixin):
     bl_idname = "pribambase.report"
-    bl_label = "Report. It doesn't seem to work as I hoped but does log nicely to the system console at least"
+    bl_label = "Report"
     bl_description = "Report the message"
-    bl_options = {'REGISTER', 'INTERNAL'}
+    bl_options = {'INTERNAL'}
 
     message_type: bpy.props.StringProperty(name="Message Type", default='INFO')
     message: bpy.props.StringProperty(name="Message", default='Someone forgot to change the message text')
 
-    def execute(self, context):
+    def modal_execute(self, context):
         self.report({self.message_type}, self.message)
         return {'FINISHED'}
