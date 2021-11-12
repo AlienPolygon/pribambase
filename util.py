@@ -30,8 +30,12 @@ from .addon import addon
 
 def refresh():
     """Tag the ui for redrawing"""
-    if bpy.context.screen:
-        for area in bpy.context.screen.areas:
+    ctx = bpy.context
+    if not ctx or not ctx.window_manager:
+        return
+    
+    for win in ctx.window_manager.windows:
+        for area in win.screen.areas:
             area.tag_redraw()
 
 
