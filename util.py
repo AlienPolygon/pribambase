@@ -137,6 +137,10 @@ class SB_OT_update_image(bpy.types.Operator, ModalExecuteMixin):
 
         img.update()
 
+        # [#12] for some users viewports do not update from update() alone
+        img.update_tag()
+        refresh()
+
         return {'FINISHED'}
 
 
