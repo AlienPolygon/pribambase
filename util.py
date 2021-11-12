@@ -88,12 +88,19 @@ def new_packed_image(name, w, h):
     os.remove(tmp)
     return img
 
-update_image_args = None
+
+_update_image_args = None
+def update_image(w, h, name, pixels):
+    global update_image_args
+    update_image_args = w, h, name, pixels
+    bpy.ops.pribambase.update_image()
+
 class SB_OT_update_image(bpy.types.Operator, ModalExecuteMixin):
     bl_idname = "pribambase.update_image"
     bl_label = "Update Image"
     bl_description = "Report the message. Not redoable atm"
     bl_options = {'REGISTER', 'UNDO_GROUPED', 'INTERNAL'}
+    bl_undo_group = "pribambase.update_image"
 
     def modal_execute(self, context):
         """Replace the image with pixel data"""
@@ -151,12 +158,6 @@ class SB_OT_update_image(bpy.types.Operator, ModalExecuteMixin):
     def execute(self, context):
         self.args = update_image_args
         return ModalExecuteMixin.execute(self, context)
-
-
-def update_image(w, h, name, pixels):
-    global update_image_args
-    update_image_args = w, h, name, pixels
-    bpy.ops.pribambase.update_image()
 
 
 class SB_OT_report(bpy.types.Operator, ModalExecuteMixin):
