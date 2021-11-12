@@ -105,14 +105,14 @@ def unregister():
     if bpy.app.timers.is_registered(start):
         bpy.app.timers.unregister(start)
 
-    if on_load_post in bpy.app.handlers.load_post:
-        bpy.app.handlers.load_post.remove(on_load_post)
+    if sb_on_load_post in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.remove(sb_on_load_post)
 
-    if on_load_pre in bpy.app.handlers.load_pre:
-        bpy.app.handlers.load_pre.remove(on_load_pre)
+    if sb_on_load_pre in bpy.app.handlers.load_pre:
+        bpy.app.handlers.load_pre.remove(sb_on_load_pre)
 
-    if on_depsgraph_update_post in bpy.app.handlers.depsgraph_update_post:
-        bpy.app.handlers.depsgraph_update_post.remove(on_depsgraph_update_post)
+    if sb_on_depsgraph_update_post in bpy.app.handlers.depsgraph_update_post:
+        bpy.app.handlers.depsgraph_update_post.remove(sb_on_depsgraph_update_post)
 
     try:
         editor_menus = bpy.types.IMAGE_MT_editor_menus
@@ -143,18 +143,18 @@ def start():
     if addon.prefs.autostart:
         addon.start_server()
 
-    if on_load_post not in bpy.app.handlers.load_post:
-        bpy.app.handlers.load_post.append(on_load_post)
+    if sb_on_load_post not in bpy.app.handlers.load_post:
+        bpy.app.handlers.load_post.append(sb_on_load_post)
 
-    if on_load_pre not in bpy.app.handlers.load_pre:
-        bpy.app.handlers.load_pre.append(on_load_pre)
+    if sb_on_load_pre not in bpy.app.handlers.load_pre:
+        bpy.app.handlers.load_pre.append(sb_on_load_pre)
 
-    if on_depsgraph_update_post not in bpy.app.handlers.depsgraph_update_post:
-        bpy.app.handlers.depsgraph_update_post.append(on_depsgraph_update_post)
+    if sb_on_depsgraph_update_post not in bpy.app.handlers.depsgraph_update_post:
+        bpy.app.handlers.depsgraph_update_post.append(sb_on_depsgraph_update_post)
 
 
 @persistent
-def on_load_post(scene):
+def sb_on_load_post(scene):
     global _images_hv
     _images_hv = hash(frozenset(img.filepath for img in bpy.data.images))
 
@@ -165,13 +165,13 @@ def on_load_post(scene):
 
 
 @persistent
-def on_load_pre(scene):
+def sb_on_load_pre(scene):
     if addon.server_up:
         addon.stop_server()
 
 
 @persistent
-def on_depsgraph_update_post(scene):
+def sb_on_depsgraph_update_post(scene):
     global _images_hv
 
     dg = bpy.context.evaluated_depsgraph_get()
@@ -189,10 +189,10 @@ def on_depsgraph_update_post(scene):
 @contextmanager
 def batch_depsgraph_updates():
     """disable depsgraph listener in the context"""
-    assert on_depsgraph_update_post in bpy.app.handlers.depsgraph_update_post
+    assert sb_on_depsgraph_update_post in bpy.app.handlers.depsgraph_update_post
 
-    bpy.app.handlers.depsgraph_update_post.remove(on_depsgraph_update_post)
+    bpy.app.handlers.depsgraph_update_post.remove(sb_on_depsgraph_update_post)
     try:
         yield None
     finally:
-        bpy.app.handlers.depsgraph_update_post.append(on_depsgraph_update_post)
+        bpy.app.handlers.depsgraph_update_post.append(sb_on_depsgraph_update_post)
