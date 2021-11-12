@@ -43,7 +43,7 @@ bl_info = {
     "author": "lampysprites",
     "description": "Paint pixelart textures in Blender using Aseprite",
     "blender": (2, 80, 0),
-    "version": (2, 0, 1),
+    "version": (2, 0, 2),
     "location": "\"Sync\" section in Tool settings; \"Sprite\" menu in UV/Image Editor",
     "category": "Paint"
 }
