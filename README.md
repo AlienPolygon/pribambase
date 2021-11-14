@@ -14,6 +14,8 @@ Currently, the addon has mostly one-way workflow where you paint in Ase and not 
 
 ## Setup
 
+_[Video version](https://youtu.be/70wyQhKyxFw) - all thanks to [frozenMeatpopsicle](https://twitter.com/fznmeatpopsicle)_
+
 This plugin consists of **two** parts: for Aseprite and for Blender. Get pre-packaged version for your OS [on Itchio](https://lampysprites.itch.io/pribambase). **Do not** download repo ZIP, it won't just work without extra steps.
 
 ### Prerequisites
